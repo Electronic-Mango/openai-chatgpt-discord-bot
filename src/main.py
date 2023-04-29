@@ -8,8 +8,9 @@ from chat import initial_message, next_message, reset_conversation
 
 load_dotenv()
 
-token = getenv("BOT_TOKEN")
-bot = BotApp(token=token, intents=Intents.ALL, prefix="!")
+RATE_LIMIT_MESSAGE = "Rate limit reached, try again in 20s."
+
+bot = BotApp(token=getenv("BOT_TOKEN"), intents=Intents.ALL, prefix="!")
 source_guild_channels = set()
 
 
@@ -18,10 +19,13 @@ source_guild_channels = set()
 @command("start", "Start conversation", auto_defer=True)
 @implements(SlashCommand, PrefixCommand)
 async def start(context: Context) -> None:
+    message = initial_message()
+    if not message:
+        await context.respond(RATE_LIMIT_MESSAGE)
+        return
     channel_id = context.channel_id
     reset_conversation(channel_id)
     source_guild_channels.add(channel_id)
-    message = initial_message()
     await context.respond(message)
 
 
@@ -53,7 +57,7 @@ async def on_message(event: MessageCreateEvent) -> None:
     if _should_skip_message(event):
         return
     response = next_message(event.channel_id, event.content)
-    await event.message.respond(response)
+    await event.message.respond(response or RATE_LIMIT_MESSAGE)
 
 
 def _should_skip_message(event: MessageCreateEvent) -> bool:

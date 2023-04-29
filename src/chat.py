@@ -3,6 +3,7 @@ from os import getenv
 
 import openai
 from dotenv import load_dotenv
+from openai.error import RateLimitError
 
 load_dotenv()
 
@@ -22,18 +23,22 @@ conversations = defaultdict(list)
 openai.api_key = TOKEN
 
 
-def initial_message() -> str:
+def initial_message() -> str | None:
     messages = [message._asdict() for message in prompt]
-    response = openai.ChatCompletion.create(model=MODEL, messages=messages)
+    response = _get_response(messages)
+    if not response:
+        return None
     response_message = _parse_response(response)
     return response_message.content
 
 
-def next_message(channel_id: int, text: str) -> str:
+def next_message(channel_id: int, text: str) -> str | None:
     conversation = conversations[channel_id]
     new_message = Message("user", text)
     messages = [message._asdict() for message in [*prompt, *conversation, new_message]]
-    response = openai.ChatCompletion.create(model=MODEL, messages=messages)
+    response = _get_response(messages)
+    if not response:
+        return None
     _store_message(conversation, new_message)
     response_message = _parse_response(response)
     _store_message(conversation, response_message)
@@ -42,6 +47,13 @@ def next_message(channel_id: int, text: str) -> str:
 
 def reset_conversation(channel_id: int) -> None:
     conversations.pop(channel_id, None)
+
+
+def _get_response(messages: list[dict[str, str]]):
+    try:
+        return openai.ChatCompletion.create(model=MODEL, messages=messages)
+    except RateLimitError:
+        return None
 
 
 def _store_message(conversation: list[Message], message: Message) -> None:
