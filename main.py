@@ -9,13 +9,14 @@ import chat
 
 load_dotenv()
 
-TOKEN = getenv("BOT_TOKEN")
+token = getenv("BOT_TOKEN")
+start_message = "Hello! How may I assist you today?"
 
 basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=INFO)
 
 
 def main() -> None:
-    application = ApplicationBuilder().token(TOKEN).build()
+    application = ApplicationBuilder().token(token).build()
 
     start_handler = CommandHandler("start", start)
     application.add_handler(start_handler)
@@ -28,7 +29,7 @@ def main() -> None:
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=start_message)
 
 
 async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
