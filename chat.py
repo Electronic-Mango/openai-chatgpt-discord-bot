@@ -37,9 +37,9 @@ def _get_conversation(chat_id: int) -> list[Message]:
 
 
 def _parse_response(response) -> Message:
-    message = response['choices'][0]['message']
-    content = message['content']
-    role = message['role']
+    message = response["choices"][0]["message"]
+    content = message["content"]
+    role = message["role"]
     return Message(role, content)
 
 
