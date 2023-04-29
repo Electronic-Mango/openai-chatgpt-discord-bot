@@ -2,7 +2,7 @@ from os import getenv
 
 from dotenv import load_dotenv
 from hikari import DMMessageCreateEvent, Intents, MessageCreateEvent
-from lightbulb import BotApp, Context, SlashCommand, add_checks, command, guild_only, implements
+from lightbulb import BotApp, Context, SlashCommand, add_checks, command, guild_only, implements, option
 
 from chat import initial_message, next_message, reset_conversation
 
@@ -51,6 +51,16 @@ async def restart(context: Context) -> None:
     source_guild_channels.add(channel_id)
     await context.respond("Conversation restarted.")
     await start(context)
+
+
+@bot.command()
+@option("query", "Text to ask", str)
+@add_checks(guild_only)
+@command("ask", "Ask for specific thing", auto_defer=True)
+@implements(SlashCommand)
+async def ask(context: Context) -> None:
+    response = next_message(context.channel_id, context.options.query)
+    await context.respond(response or RATE_LIMIT_MESSAGE)
 
 
 @bot.listen()
