@@ -1,5 +1,4 @@
 from collections import defaultdict, namedtuple
-from logging import info
 from os import getenv
 
 import openai
@@ -23,7 +22,6 @@ def next_message(chat_id: int, text: str) -> str:
     message_list = [message._asdict() for message in [*conversation, new_message]]
     response = openai.ChatCompletion.create(model=model, messages=message_list)
     conversation.append(new_message)
-    info(response)
     response_message = _parse_response(response)
     conversation.append(response_message)
     return response_message.content
