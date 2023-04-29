@@ -1,7 +1,7 @@
 from os import getenv
 
 from dotenv import load_dotenv
-from hikari import DMMessageCreateEvent, Intents, MessageCreateEvent
+from hikari import GuildMessageCreateEvent, Intents, MessageCreateEvent
 from lightbulb import BotApp, Context, SlashCommand, add_checks, command, guild_only, implements, option
 from lightbulb.commands import MessageCommand
 
@@ -56,6 +56,7 @@ async def stop(context: Context) -> None:
 
 
 @bot.command()
+@add_checks(guild_only)
 @command("restart", "Restarts conversation and its context", auto_defer=True)
 @implements(SlashCommand)
 async def restart(context: Context) -> None:
@@ -76,6 +77,7 @@ async def ask(context: Context) -> None:
 
 
 @bot.command()
+@add_checks(guild_only)
 @command("ask", "Ask for specific thing", auto_defer=True)
 @implements(MessageCommand)
 async def ask_directly(context: Context) -> None:
@@ -84,6 +86,7 @@ async def ask_directly(context: Context) -> None:
 
 
 @bot.command()
+@add_checks(guild_only)
 @option("prompt", "New custom prompt", str)
 @command("set_prompt", "Set custom prompt for this channel")
 @implements(SlashCommand)
@@ -96,6 +99,7 @@ async def set_prompt(context: Context) -> None:
 
 
 @bot.command()
+@add_checks(guild_only)
 @command("clear_prompt", "Clear custom prompt for this channel")
 @implements(SlashCommand)
 async def clear_prompt(context: Context) -> None:
@@ -114,11 +118,11 @@ async def on_message(event: MessageCreateEvent) -> None:
 
 
 def _should_skip_message(event: MessageCreateEvent) -> bool:
-    if not event.is_human or event.content[0] == "!":
-        return True
-    if isinstance(event, DMMessageCreateEvent):
-        return False
-    return event.channel_id not in source_guild_channels
+    return (
+            not event.is_human
+            or not isinstance(event, GuildMessageCreateEvent)
+            or event.channel_id not in source_guild_channels
+    )
 
 
 bot.run()

@@ -2,7 +2,7 @@
 
 A simple Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari)!
 
-Just start a conversation and all messages in the chat will be used as inputs for ChatGPT.
+Bot works only on servers and won't respond to DMs.
 
 Conversation/context is not stored permanently and will be removed when the bot is restarted.
 
@@ -60,9 +60,11 @@ OPENAI_INITIAL_MESSAGE='You are a helpful assistant acting like 18th century but
 
 ## Commands
 
-* `/start` - starts responding to all messages in current channel, server only
-* `/quiet_start` - starts responding to all messages in current channel without notifying other users, server only
-* `/stop` - stops responding to messages, server only
+All commands work only on servers and aren't available in DMs.
+
+* `/start` - starts responding to all messages in current channel
+* `/quiet_start` - starts responding to all messages in current channel without notifying other users
+* `/stop` - stops responding to messages
 * `/restart` - resets current conversation and removes all context, other than system message
 * `/ask` - ask for specific prompt, can be used in channels which aren't actively monitored, guild only
 * `ask` - **message command**, can use specified message as prompt
