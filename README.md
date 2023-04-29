@@ -60,7 +60,24 @@ OPENAI_SYSTEM_MESSAGE='You are a helpful assistant.'
 
 ## Running the bot
 
+You can run the bot from the source code directly, or in a Docker container.
+
+
+### From source code
+
+1. Create a Telegram bot via [BotFather](https://core.telegram.org/bots#6-botfather)
+2. Create [OpenAI API key](https://platform.openai.com/account/api-keys)
+3. Install all packages from `requirements.txt`
+4. Fill `.env` file
+5. Run `main.py` file with Python
+
+
+### Docker
+
 1. Create a Telegram bot via [BotFather](https://core.telegram.org/bots#6-botfather)
 2. Create [OpenAI API key](https://platform.openai.com/account/api-keys)
 3. Fill `.env` file
-4. Run `main.py` file with Python
+4. Run `docker compose up -d --build` in terminal
+
+Note that `.env` file is used only for loading environment variables into Docker container through compose.
+The file itself isn't added to the container.
