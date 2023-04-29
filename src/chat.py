@@ -10,7 +10,14 @@ Message = namedtuple("Message", ["role", "content"])
 
 token = getenv("OPENAI_TOKEN")
 model = getenv("OPENAI_MODEL")
-prompt = Message("system", getenv("OPENAI_SYSTEM_MESSAGE"))
+system_message = getenv("OPENAI_SYSTEM_MESSAGE")
+initial_message = getenv("OPENAI_INITIAL_MESSAGE")
+context_limit = getenv("OPENAI_CONTEXT_LIMIT")
+context_limit = int(context_limit) if context_limit else None
+
+prompt = [Message("system", system_message)]
+if initial_message:
+    prompt.append(Message("user", initial_message))
 conversations = defaultdict(list)
 
 openai.api_key = token
@@ -27,10 +34,14 @@ def next_message(chat_id: int, text: str) -> str:
     return response_message.content
 
 
+def reset(chat_id: int) -> None:
+    conversations.pop(chat_id, None)
+
+
 def _get_conversation(chat_id: int) -> list[Message]:
     conversation = conversations[chat_id]
     if not conversation:
-        conversation.append(prompt)
+        conversation.extend(prompt)
     return conversation
 
 
@@ -39,7 +50,3 @@ def _parse_response(response) -> Message:
     content = message["content"]
     role = message["role"]
     return Message(role, content)
-
-
-def reset(chat_id: int) -> None:
-    conversations.pop(chat_id, None)
