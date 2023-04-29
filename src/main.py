@@ -1,8 +1,8 @@
 from os import getenv
 
 from dotenv import load_dotenv
-from hikari import Intents, MessageCreateEvent
-from lightbulb import BotApp, Context, PrefixCommand, SlashCommand, command, implements
+from hikari import Intents, MessageCreateEvent, DMMessageCreateEvent
+from lightbulb import BotApp, Context, PrefixCommand, SlashCommand, command, implements, add_checks, guild_only
 
 from chat import next_message, reset_conversation
 
@@ -14,6 +14,7 @@ source_channel = None
 
 
 @bot.command()
+@add_checks(guild_only)
 @command("start", "Start conversation")
 @implements(SlashCommand, PrefixCommand)
 async def start(context: Context) -> None:
@@ -22,6 +23,7 @@ async def start(context: Context) -> None:
 
 
 @bot.command()
+@add_checks(guild_only)
 @command("stop", "Stops conversation")
 @implements(SlashCommand, PrefixCommand)
 async def stop(context: Context) -> None:
@@ -45,10 +47,18 @@ def _reset_conversation_and_set_channel(channel: int | None) -> None:
 
 @bot.listen()
 async def on_message(event: MessageCreateEvent) -> None:
-    if not event.is_human or event.content[0] == "!" or event.channel_id != source_channel:
+    if _should_skip_message(event):
         return
     response = next_message(event.content)
     await event.message.respond(response)
+
+
+def _should_skip_message(event: MessageCreateEvent) -> bool:
+    if not event.is_human or event.content[0] == "!":
+        return True
+    if isinstance(event, DMMessageCreateEvent):
+        return False
+    return event.channel_id != source_channel
 
 
 bot.run()
