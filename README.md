@@ -41,19 +41,26 @@ One required parameter is [API key](https://platform.openai.com/account/api-keys
 OPENAI_TOKEN='<your secret API key>'
 ```
 
-Through `.env` you can also configure which model to use (gpt-3.5-turbo is used by default) and system message.
+Through `.env` you can also configure other parameters:
+* `OPENAI_MODEL` - which model to use (gpt-3.5-turbo is used by default)
+* `OPENAI_SYSTEM_MESSAGE` - system message
+* `OPENAI_CONTEXT_LIMIT` - how many messages will be kept in the context, all messages will be kept if empty
+* `OPENAI_INITIAL_MESSAGE` - additional message added after system message to all conversations, can be empty for no additional messages
 
 Note that `gpt-3.5-turbo` [doesn't pay strong attention to system message](https://platform.openai.com/docs/guides/chat/instructing-chat-models), so changing it might not provide significant changes to responses.
+You can use `OPENAI_INITIAL_MESSAGE` to tweak initial behaviour of the model.
 
 ```dotenv
 OPENAI_MODEL='gpt-3.5-turbo'
 OPENAI_SYSTEM_MESSAGE='You are a helpful assistant.'
+OPENAI_CONTEXT_LIMIT=1000
+OPENAI_INITIAL_MESSAGE='You are a helpful assistant acting like 18th century butler,'
 ```
 
 
 ## Commands
 
-* `/start` - prints initial message
+* `/start` - prints initial message returned from the model for just system message and optional initial message, doesn't impact conversation context
 * `/reset` - resets current conversation and removes all context, other than system message
 
 
