@@ -34,7 +34,7 @@ async def stop(context: Context) -> None:
 @implements(SlashCommand)
 async def restart(context: Context) -> None:
     _restart_and_set_channel(context.get_channel())
-    await context.respond("Conversation restarted!")
+    await context.respond("Conversation restarted.")
 
 
 def _restart_and_set_channel(channel: GuildChannel | None) -> None:
