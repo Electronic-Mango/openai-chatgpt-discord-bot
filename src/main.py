@@ -5,19 +5,18 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 
-import chat
-import rate_error_handler
+from chat import initial_message, next_message, reset_conversation
+from rate_error_handler import rate_error_handler
 
 load_dotenv()
 
-token = getenv("BOT_TOKEN")
-start_message = "Hello! How may I assist you today?"
+TOKEN = getenv("BOT_TOKEN")
 
 basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=INFO)
 
 
 def main() -> None:
-    application = ApplicationBuilder().token(token).build()
+    application = ApplicationBuilder().token(TOKEN).build()
 
     start_handler = CommandHandler("start", start)
     application.add_handler(start_handler)
@@ -26,25 +25,27 @@ def main() -> None:
     reset_handler = CommandHandler("reset", reset)
     application.add_handler(reset_handler)
 
-    application.add_error_handler(rate_error_handler.error_handler)
+    application.add_error_handler(rate_error_handler)
 
     application.run_polling()
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=start_message)
+    message = initial_message()
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
 async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
-    response = chat.next_message(chat_id, update.message.text)
+    response = next_message(chat_id, update.message.text)
     await context.bot.send_message(chat_id=chat_id, text=response)
 
 
 async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
-    chat.reset(chat_id)
+    reset_conversation(chat_id)
     await context.bot.send_message(chat_id=chat_id, text="Conversation restarted.")
+    await start(update, context)
 
 
 if __name__ == "__main__":

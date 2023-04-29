@@ -53,7 +53,7 @@ OPENAI_SYSTEM_MESSAGE='You are a helpful assistant.'
 
 ## Commands
 
-* `/start` - prints a basic "hello" message, copied from ChatGPT response
+* `/start` - prints initial message
 * `/reset` - resets current conversation and removes all context, other than system message
 
 

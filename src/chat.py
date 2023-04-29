@@ -8,33 +8,40 @@ load_dotenv()
 
 Message = namedtuple("Message", ["role", "content"])
 
-token = getenv("OPENAI_TOKEN")
-model = getenv("OPENAI_MODEL")
-system_message = getenv("OPENAI_SYSTEM_MESSAGE")
-initial_message = getenv("OPENAI_INITIAL_MESSAGE")
-context_limit = getenv("OPENAI_CONTEXT_LIMIT")
-context_limit = int(context_limit) if context_limit else None
+TOKEN = getenv("OPENAI_TOKEN")
+MODEL = getenv("OPENAI_MODEL")
+SYSTEM_MESSAGE = getenv("OPENAI_SYSTEM_MESSAGE")
+INITIAL_MESSAGE = getenv("OPENAI_INITIAL_MESSAGE")
+CONTEXT_LIMIT = getenv("OPENAI_CONTEXT_LIMIT")
+CONTEXT_LIMIT = int(CONTEXT_LIMIT) if CONTEXT_LIMIT else None
 
-prompt = [Message("system", system_message)]
-if initial_message:
-    prompt.append(Message("user", initial_message))
+prompt = [Message("system", SYSTEM_MESSAGE)]
+if INITIAL_MESSAGE:
+    prompt.append(Message("user", INITIAL_MESSAGE))
 conversations = defaultdict(list)
 
-openai.api_key = token
+openai.api_key = TOKEN
+
+
+def initial_message() -> str:
+    messages = [message._asdict() for message in prompt]
+    response = openai.ChatCompletion.create(model=MODEL, messages=messages)
+    response_message = _parse_response(response)
+    return response_message.content
 
 
 def next_message(chat_id: int, text: str) -> str:
     conversation = _get_conversation(chat_id)
     new_message = Message("user", text)
-    message_list = [message._asdict() for message in [*conversation, new_message]]
-    response = openai.ChatCompletion.create(model=model, messages=message_list)
+    messages = [message._asdict() for message in [*conversation, new_message]]
+    response = openai.ChatCompletion.create(model=MODEL, messages=messages)
     conversation.append(new_message)
     response_message = _parse_response(response)
     conversation.append(response_message)
     return response_message.content
 
 
-def reset(chat_id: int) -> None:
+def reset_conversation(chat_id: int) -> None:
     conversations.pop(chat_id, None)
 
 
