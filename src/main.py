@@ -1,10 +1,10 @@
 from os import getenv
 
 from dotenv import load_dotenv
-from hikari import Intents, MessageCreateEvent, DMMessageCreateEvent
-from lightbulb import BotApp, Context, PrefixCommand, SlashCommand, command, implements, add_checks, guild_only
+from hikari import DMMessageCreateEvent, Intents, MessageCreateEvent
+from lightbulb import BotApp, Context, PrefixCommand, SlashCommand, add_checks, command, guild_only, implements
 
-from chat import next_message, reset_conversation
+from chat import initial_message, next_message, reset_conversation
 
 load_dotenv()
 
@@ -15,11 +15,12 @@ source_channel = None
 
 @bot.command()
 @add_checks(guild_only)
-@command("start", "Start conversation")
+@command("start", "Start conversation", auto_defer=True)
 @implements(SlashCommand, PrefixCommand)
 async def start(context: Context) -> None:
     _reset_conversation_and_set_channel(context.channel_id)
-    await context.respond("Hello! How may I assist you today?")
+    message = initial_message()
+    await context.respond(message)
 
 
 @bot.command()
@@ -32,15 +33,16 @@ async def stop(context: Context) -> None:
 
 
 @bot.command()
-@command("restart", "Restarts conversation and its context")
+@command("restart", "Restarts conversation and its context", auto_defer=True)
 @implements(SlashCommand, PrefixCommand)
 async def restart(context: Context) -> None:
     _reset_conversation_and_set_channel(context.channel_id)
     await context.respond("Conversation restarted.")
+    await start(context)
 
 
 def _reset_conversation_and_set_channel(channel: int | None) -> None:
-    reset_conversation()
+    reset_conversation(0)
     global source_channel
     source_channel = channel
 
@@ -49,7 +51,7 @@ def _reset_conversation_and_set_channel(channel: int | None) -> None:
 async def on_message(event: MessageCreateEvent) -> None:
     if _should_skip_message(event):
         return
-    response = next_message(event.content)
+    response = next_message(0, event.content)
     await event.message.respond(response)
 
 
