@@ -33,13 +33,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def talk(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    response = chat.next_message(update.message.text)
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=response)
+    chat_id = update.effective_chat.id
+    response = chat.next_message(chat_id, update.message.text)
+    await context.bot.send_message(chat_id=chat_id, text=response)
 
 
 async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat.reset()
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="Conversation restarted.")
+    chat_id = update.effective_chat.id
+    chat.reset(chat_id)
+    await context.bot.send_message(chat_id=chat_id, text="Conversation restarted.")
 
 
 if __name__ == "__main__":

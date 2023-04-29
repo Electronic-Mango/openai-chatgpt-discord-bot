@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 from logging import info
 from os import getenv
 
@@ -12,23 +12,36 @@ Message = namedtuple("Message", ["role", "content"])
 token = getenv("OPENAI_TOKEN")
 model = getenv("OPENAI_MODEL")
 prompt = Message("system", getenv("OPENAI_PROMPT"))
-messages = [prompt]
+conversations = defaultdict(list)
 
 openai.api_key = token
 
 
-def next_message(text: str) -> str:
+def next_message(chat_id: int, text: str) -> str:
+    conversation = _get_conversation(chat_id)
     new_message = Message("user", text)
-    messages.append(new_message)
-    response = openai.ChatCompletion.create(model=model, messages=[message._asdict() for message in messages])
+    message_list = [message._asdict() for message in [*conversation, new_message]]
+    response = openai.ChatCompletion.create(model=model, messages=message_list)
+    conversation.append(new_message)
     info(response)
-    response_message = response['choices'][0]['message']
-    response_content = response_message['content']
-    response_role = response_message['role']
-    messages.append(Message(response_role, response_content))
-    return response_content
+    response_message = _parse_response(response)
+    conversation.append(response_message)
+    return response_message.content
 
 
-def reset() -> None:
-    messages.clear()
-    messages.append(prompt)
+def _get_conversation(chat_id: int) -> list[Message]:
+    conversation = conversations[chat_id]
+    if not conversation:
+        conversation.append(prompt)
+    return conversation
+
+
+def _parse_response(response) -> Message:
+    message = response['choices'][0]['message']
+    content = message['content']
+    role = message['role']
+    return Message(role, content)
+
+
+def reset(chat_id: int) -> None:
+    conversations.pop(chat_id)
