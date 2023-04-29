@@ -5,7 +5,7 @@ from hikari import DMMessageCreateEvent, Intents, MessageCreateEvent
 from lightbulb import BotApp, Context, SlashCommand, add_checks, command, guild_only, implements, option
 from lightbulb.commands import MessageCommand
 
-from chat import initial_message, next_message, reset_conversation
+from chat import initial_message, next_message, remove_custom_prompt, reset_conversation, store_custom_prompt
 
 load_dotenv()
 
@@ -49,7 +49,6 @@ async def stop(context: Context) -> None:
 async def restart(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
-    source_guild_channels.add(channel_id)
     await context.respond("Conversation restarted.")
     await start(context)
 
@@ -65,11 +64,33 @@ async def ask(context: Context) -> None:
 
 
 @bot.command()
-@command("ask", "Ask for specific thing", auto_defer=True, guilds=(999740151855067216,))
+@command("ask", "Ask for specific thing", auto_defer=True)
 @implements(MessageCommand)
 async def ask_directly(context: Context) -> None:
     response = next_message(context.channel_id, context.options.target.content)
     await context.respond(response or RATE_LIMIT_MESSAGE)
+
+
+@bot.command()
+@option("prompt", "New custom prompt", str)
+@command("set_prompt", "Set custom prompt for this channel")
+@implements(SlashCommand)
+async def set_prompt(context: Context) -> None:
+    channel_id = context.channel_id
+    reset_conversation(channel_id)
+    new_prompt = context.options.prompt
+    store_custom_prompt(channel_id, new_prompt)
+    await context.respond(f"Prompt set to: **{new_prompt}**")
+
+
+@bot.command()
+@command("clear_prompt", "Clear custom prompt for this channel")
+@implements(SlashCommand)
+async def clear_prompt(context: Context) -> None:
+    channel_id = context.channel_id
+    reset_conversation(channel_id)
+    remove_custom_prompt(channel_id)
+    await context.respond("Prompt cleared.")
 
 
 @bot.listen()

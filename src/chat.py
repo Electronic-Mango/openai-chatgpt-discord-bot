@@ -15,16 +15,17 @@ SYSTEM_MESSAGE = getenv("OPENAI_SYSTEM_MESSAGE")
 INITIAL_MESSAGE = getenv("OPENAI_INITIAL_MESSAGE")
 CONTEXT_LIMIT = getenv("OPENAI_CONTEXT_LIMIT")
 
-prompt = [Message("system", SYSTEM_MESSAGE)]
+initial_prompt = [Message("system", SYSTEM_MESSAGE)]
 if INITIAL_MESSAGE:
-    prompt.append(Message("user", INITIAL_MESSAGE))
+    initial_prompt.append(Message("user", INITIAL_MESSAGE))
 conversations = defaultdict(list)
+custom_prompts = {}
 
 openai.api_key = TOKEN
 
 
 def initial_message() -> str | None:
-    messages = [message._asdict() for message in prompt]
+    messages = [message._asdict() for message in initial_prompt]
     response = _get_response(messages)
     if not response:
         return None
@@ -35,7 +36,7 @@ def initial_message() -> str | None:
 def next_message(channel_id: int, text: str) -> str | None:
     conversation = conversations[channel_id]
     new_message = Message("user", text)
-    messages = [message._asdict() for message in [*prompt, *conversation, new_message]]
+    messages = [message._asdict() for message in [*_get_prompt(channel_id), *conversation, new_message]]
     response = _get_response(messages)
     if not response:
         return None
@@ -47,6 +48,19 @@ def next_message(channel_id: int, text: str) -> str | None:
 
 def reset_conversation(channel_id: int) -> None:
     conversations.pop(channel_id, None)
+
+
+def store_custom_prompt(channel_id: int, prompt: str) -> None:
+    custom_prompts[channel_id] = [Message("system", prompt), Message("user", prompt)]
+
+
+def remove_custom_prompt(channel_id: int) -> None:
+    if channel_id in custom_prompts:
+        custom_prompts.pop(channel_id, None)
+
+
+def _get_prompt(channel_id: int) -> list[Message]:
+    return custom_prompts[channel_id] if channel_id in custom_prompts else initial_prompt
 
 
 def _get_response(messages: list[dict[str, str]]):
