@@ -44,4 +44,4 @@ def _parse_response(response) -> Message:
 
 
 def reset(chat_id: int) -> None:
-    conversations.pop(chat_id)
+    conversations.pop(chat_id, None)
