@@ -6,6 +6,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 
 import chat
+import rate_error_handler
 
 load_dotenv()
 
@@ -24,6 +25,8 @@ def main() -> None:
     application.add_handler(talk_handler)
     reset_handler = CommandHandler("reset", reset)
     application.add_handler(reset_handler)
+
+    application.add_error_handler(rate_error_handler.error_handler)
 
     application.run_polling()
 
