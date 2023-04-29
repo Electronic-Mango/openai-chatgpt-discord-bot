@@ -44,7 +44,7 @@ OPENAI_TOKEN='<your secret API key>'
 Through `.env` you can also configure other parameters:
 * `OPENAI_MODEL` - which model to use (gpt-3.5-turbo is used by default)
 * `OPENAI_SYSTEM_MESSAGE` - system message
-* `OPENAI_CONTEXT_LIMIT` - how many messages will be kept in the context, all messages will be kept if empty
+* `OPENAI_CONTEXT_LIMIT` - how many messages will be kept in the context aside from prompt, all messages will be kept if empty
 * `OPENAI_INITIAL_MESSAGE` - additional message added after system message to all conversations, can be empty for no additional messages
 
 Note that `gpt-3.5-turbo` [doesn't pay strong attention to system message](https://platform.openai.com/docs/guides/chat/instructing-chat-models), so changing it might not provide significant changes to responses.

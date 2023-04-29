@@ -13,7 +13,6 @@ MODEL = getenv("OPENAI_MODEL")
 SYSTEM_MESSAGE = getenv("OPENAI_SYSTEM_MESSAGE")
 INITIAL_MESSAGE = getenv("OPENAI_INITIAL_MESSAGE")
 CONTEXT_LIMIT = getenv("OPENAI_CONTEXT_LIMIT")
-CONTEXT_LIMIT = int(CONTEXT_LIMIT) if CONTEXT_LIMIT else None
 
 prompt = [Message("system", SYSTEM_MESSAGE)]
 if INITIAL_MESSAGE:
@@ -31,13 +30,13 @@ def initial_message() -> str:
 
 
 def next_message(chat_id: int, text: str) -> str:
-    conversation = _get_conversation(chat_id)
+    conversation = conversations[chat_id]
     new_message = Message("user", text)
-    messages = [message._asdict() for message in [*conversation, new_message]]
+    messages = [message._asdict() for message in [*prompt, *conversation, new_message]]
     response = openai.ChatCompletion.create(model=MODEL, messages=messages)
-    conversation.append(new_message)
+    _store_message(conversation, new_message)
     response_message = _parse_response(response)
-    conversation.append(response_message)
+    _store_message(conversation, response_message)
     return response_message.content
 
 
@@ -45,11 +44,10 @@ def reset_conversation(chat_id: int) -> None:
     conversations.pop(chat_id, None)
 
 
-def _get_conversation(chat_id: int) -> list[Message]:
-    conversation = conversations[chat_id]
-    if not conversation:
-        conversation.extend(prompt)
-    return conversation
+def _store_message(conversation: list[Message], message: Message) -> None:
+    conversation.append(message)
+    if CONTEXT_LIMIT and len(conversation) > int(CONTEXT_LIMIT):
+        conversation.pop(0)
 
 
 def _parse_response(response) -> Message:
