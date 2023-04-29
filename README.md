@@ -60,8 +60,14 @@ OPENAI_INITIAL_MESSAGE='You are a helpful assistant acting like 18th century but
 
 ## Commands
 
-* `/start` - prints initial message returned from the model for just system message and optional initial message, doesn't impact conversation context
-* `/reset` - resets current conversation and removes all context, other than system message
+* `/start` - starts responding to all messages in current channel, server only
+* `/quiet_start` - starts responding to all messages in current channel without notifying other users, server only
+* `/stop` - stops responding to messages, server only
+* `/restart` - resets current conversation and removes all context, other than system message
+* `/ask` - ask for specific prompt, can be used in channels which aren't actively monitored, guild only
+* `ask` - **message command**, can use specified message as prompt
+* `/set_prompt <prompt text>` - sets custom prompt for this channel
+* `/clear_prompt` - clears custom prompt for this channel
 
 
 
