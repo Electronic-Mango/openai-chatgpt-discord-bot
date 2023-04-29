@@ -1,6 +1,6 @@
-# Simple OpenAI text model Telegram bot
+# Simple OpenAI text model Discord bot
 
-A simple Telegram bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`python-telegram-bot`](https://github.com/python-telegram-bot/python-telegram-bot)!
+A simple Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari)!
 
 Just start a conversation and all messages in the chat will be used as inputs for ChatGPT.
 
@@ -10,7 +10,7 @@ Conversation/context is not stored permanently and will be removed when the bot 
 
 ## Requirements
 
-This bot was built with `Python 3.11`, [`python-telegram-bot`](https://github.com/python-telegram-bot/python-telegram-bot) and [`openai-python`](https://github.com/openai/openai-python).
+This bot was built with `Python 3.11`, [`hikari`](https://github.com/hikari-py/hikari) and [`openai-python`](https://github.com/openai/openai-python).
 Full list of Python requirements is in the `requirements.txt` file, you can use it to install all of them.
 
 
@@ -24,9 +24,9 @@ cp .env.example .env
 ```
 
 
-### Telegram bot
+### Discord bot
 
-Only required parameter is a [bot token](https://core.telegram.org/bots#creating-a-new-bot).
+Only required parameter is a bot token
 
 ```dotenv
 BOT_TOKEN='<your secret bot token>'
@@ -65,7 +65,7 @@ You can run the bot from the source code directly, or in a Docker container.
 
 ### From source code
 
-1. Create a Telegram bot via [BotFather](https://core.telegram.org/bots#6-botfather)
+1. Create a Discord bot
 2. Create [OpenAI API key](https://platform.openai.com/account/api-keys)
 3. Install all packages from `requirements.txt`
 4. Fill `.env` file
@@ -74,7 +74,7 @@ You can run the bot from the source code directly, or in a Docker container.
 
 ### Docker
 
-1. Create a Telegram bot via [BotFather](https://core.telegram.org/bots#6-botfather)
+1. Create a Discord bot
 2. Create [OpenAI API key](https://platform.openai.com/account/api-keys)
 3. Fill `.env` file
 4. Run `docker compose up -d --build` in terminal

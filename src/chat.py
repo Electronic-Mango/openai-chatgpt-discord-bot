@@ -1,4 +1,4 @@
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 from os import getenv
 
 import openai
@@ -11,13 +11,12 @@ Message = namedtuple("Message", ["role", "content"])
 token = getenv("OPENAI_TOKEN")
 model = getenv("OPENAI_MODEL")
 prompt = Message("system", getenv("OPENAI_SYSTEM_MESSAGE"))
-conversations = defaultdict(list)
+conversation = [prompt]
 
 openai.api_key = token
 
 
-def next_message(chat_id: int, text: str) -> str:
-    conversation = _get_conversation(chat_id)
+def next_message(text: str) -> str:
     new_message = Message("user", text)
     message_list = [message._asdict() for message in [*conversation, new_message]]
     response = openai.ChatCompletion.create(model=model, messages=message_list)
@@ -27,13 +26,6 @@ def next_message(chat_id: int, text: str) -> str:
     return response_message.content
 
 
-def _get_conversation(chat_id: int) -> list[Message]:
-    conversation = conversations[chat_id]
-    if not conversation:
-        conversation.append(prompt)
-    return conversation
-
-
 def _parse_response(response) -> Message:
     message = response["choices"][0]["message"]
     content = message["content"]
@@ -41,5 +33,6 @@ def _parse_response(response) -> Message:
     return Message(role, content)
 
 
-def reset(chat_id: int) -> None:
-    conversations.pop(chat_id, None)
+def reset() -> None:
+    conversation.clear()
+    conversation.append(prompt)
