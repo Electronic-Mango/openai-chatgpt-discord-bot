@@ -2,22 +2,23 @@ from os import getenv
 
 from dotenv import load_dotenv
 from hikari import DMMessageCreateEvent, Intents, MessageCreateEvent
-from lightbulb import BotApp, Context, PrefixCommand, SlashCommand, add_checks, command, guild_only, implements
+from lightbulb import BotApp, Context, SlashCommand, add_checks, command, guild_only, implements
 
 from chat import initial_message, next_message, reset_conversation
 
 load_dotenv()
 
 RATE_LIMIT_MESSAGE = "Rate limit reached, try again in 20s."
+INTENTS = Intents.MESSAGE_CONTENT | Intents.DM_MESSAGES | Intents.GUILD_MESSAGES
 
-bot = BotApp(token=getenv("BOT_TOKEN"), intents=Intents.ALL, prefix="!")
+bot = BotApp(token=getenv("BOT_TOKEN"), intents=INTENTS)
 source_guild_channels = set()
 
 
 @bot.command()
 @add_checks(guild_only)
 @command("start", "Start conversation", auto_defer=True)
-@implements(SlashCommand, PrefixCommand)
+@implements(SlashCommand)
 async def start(context: Context) -> None:
     message = initial_message()
     if not message:
@@ -32,7 +33,7 @@ async def start(context: Context) -> None:
 @bot.command()
 @add_checks(guild_only)
 @command("stop", "Stops conversation")
-@implements(SlashCommand, PrefixCommand)
+@implements(SlashCommand)
 async def stop(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
@@ -43,7 +44,7 @@ async def stop(context: Context) -> None:
 
 @bot.command()
 @command("restart", "Restarts conversation and its context", auto_defer=True)
-@implements(SlashCommand, PrefixCommand)
+@implements(SlashCommand)
 async def restart(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
