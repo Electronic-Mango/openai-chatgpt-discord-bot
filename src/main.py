@@ -24,7 +24,19 @@ async def start(context: Context) -> None:
     message = initial_message()
     if not message:
         await context.respond(RATE_LIMIT_MESSAGE)
-        return
+    else:
+        await _start(message, context)
+
+
+@bot.command()
+@add_checks(guild_only)
+@command("quiet_start", "Start conversation without notifying other users", ephemeral=True)
+@implements(SlashCommand)
+async def quiet_start(context: Context) -> None:
+    await _start("Replying to all messages.", context)
+
+
+async def _start(message: str, context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     source_guild_channels.add(channel_id)
