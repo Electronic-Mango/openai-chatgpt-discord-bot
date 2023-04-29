@@ -11,7 +11,7 @@ Message = namedtuple("Message", ["role", "content"])
 
 token = getenv("OPENAI_TOKEN")
 model = getenv("OPENAI_MODEL")
-prompt = Message("system", getenv("OPENAI_PROMPT"))
+prompt = Message("system", getenv("OPENAI_SYSTEM_MESSAGE"))
 conversations = defaultdict(list)
 
 openai.api_key = token
