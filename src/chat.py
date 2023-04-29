@@ -33,6 +33,6 @@ def _parse_response(response) -> Message:
     return Message(role, content)
 
 
-def reset() -> None:
+def reset_conversation() -> None:
     conversation.clear()
     conversation.append(prompt)
