@@ -4,14 +4,14 @@
 
 version: "3.9"
 services:
-  chatgpt-telegram-bot:
-    image: chatgpt-telegram-bot:latest
+  chatgpt-discord-bot:
+    image: chatgpt-discord-bot:latest
     build: .
-    container_name: chatgpt-telegram-bot
+    container_name: chatgpt-discord-bot
     restart: unless-stopped
     env_file: .env
 networks:
   default:
-    name: chatgpt-telegram-bot-network
+    name: chatgpt-discord-bot-network
     driver: bridge
 
