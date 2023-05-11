@@ -9,6 +9,8 @@ load_dotenv()
 
 Message = namedtuple("Message", ["role", "content"])
 
+RATE_LIMIT_MESSAGE = "Rate limit reached, try again in 20s."
+
 TOKEN = getenv("OPENAI_TOKEN")
 MODEL = getenv("OPENAI_MODEL")
 SYSTEM_MESSAGE = getenv("OPENAI_SYSTEM_MESSAGE")
@@ -26,14 +28,14 @@ def initial_message(channel_id: int) -> str | None:
     return next_message(channel_id, None)
 
 
-def next_message(channel_id: int, text: str) -> str | None:
+def next_message(channel_id: int, text: str) -> str:
     prompt = custom_prompts[channel_id]
     conversation = conversations[channel_id]
     new_message = Message("user", text)
     messages = [message._asdict() for message in [*prompt, *conversation, new_message] if message.content]
     response = _get_response(messages)
     if not response:
-        return None
+        return RATE_LIMIT_MESSAGE
     _store_message(conversation, new_message)
     response_message = _parse_response(response)
     _store_message(conversation, response_message)

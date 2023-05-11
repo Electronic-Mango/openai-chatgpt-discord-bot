@@ -11,7 +11,6 @@ from chat import (initial_message, next_message, remove_custom_prompt, remove_pr
 
 load_dotenv()
 
-RATE_LIMIT_MESSAGE = "Rate limit reached, try again in 20s."
 INTENTS = Intents.MESSAGE_CONTENT | Intents.DM_MESSAGES | Intents.GUILD_MESSAGES
 
 bot = BotApp(token=getenv("BOT_TOKEN"), intents=INTENTS)
@@ -23,11 +22,7 @@ source_guild_channels = set()
 @command("start", "Start conversation", auto_defer=True)
 @implements(SlashCommand)
 async def start(context: Context) -> None:
-    message = initial_message(context.channel_id)
-    if not message:
-        await context.respond(RATE_LIMIT_MESSAGE)
-    else:
-        await _start(message, context)
+    await _start(initial_message(context.channel_id), context)
 
 
 @bot.command()
@@ -75,7 +70,7 @@ async def restart(context: Context) -> None:
 @implements(SlashCommand)
 async def ask(context: Context) -> None:
     response = next_message(context.channel_id, context.options.query)
-    await context.respond(response or RATE_LIMIT_MESSAGE)
+    await context.respond(response)
 
 
 @bot.command()
@@ -84,7 +79,7 @@ async def ask(context: Context) -> None:
 @implements(MessageCommand)
 async def ask_directly(context: Context) -> None:
     response = next_message(context.channel_id, context.options.target.content)
-    await context.respond(response or RATE_LIMIT_MESSAGE)
+    await context.respond(response)
 
 
 @bot.command
@@ -145,7 +140,7 @@ async def on_message(event: MessageCreateEvent) -> None:
     if _should_skip_message(event):
         return
     response = next_message(event.channel_id, event.content)
-    await event.message.respond(response or RATE_LIMIT_MESSAGE)
+    await event.message.respond(response)
 
 
 def _should_skip_message(event: MessageCreateEvent) -> bool:
