@@ -148,6 +148,7 @@ def _should_skip_message(event: MessageCreateEvent) -> bool:
             not event.is_human
             or not isinstance(event, GuildMessageCreateEvent)
             or event.channel_id not in source_guild_channels
+            or not event.content
     )
 
 
