@@ -13,7 +13,7 @@ load_dotenv()
 
 INTENTS = Intents.MESSAGE_CONTENT | Intents.DM_MESSAGES | Intents.GUILD_MESSAGES
 
-bot = BotApp(token=getenv("BOT_TOKEN"), intents=INTENTS)
+bot = BotApp(token=getenv("BOT_TOKEN"), intents=INTENTS, help_slash_command=True)
 source_guild_channels = set()
 
 
@@ -84,7 +84,7 @@ async def ask_directly(context: Context) -> None:
 
 @bot.command
 @add_checks(guild_only)
-@command("prompt", "Commands related to forced prompts")
+@command("prompt", "Command group related to forced prompts")
 @implements(SlashCommandGroup)
 async def prompt(_: Context) -> None:
     pass
