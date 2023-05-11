@@ -34,9 +34,10 @@ def initial_message() -> str | None:
 
 
 def next_message(channel_id: int, text: str) -> str | None:
+    prompt = custom_prompts[channel_id]
     conversation = conversations[channel_id]
     new_message = Message("user", text)
-    messages = [message._asdict() for message in [*custom_prompts[channel_id], *conversation, new_message]]
+    messages = [message._asdict() for message in [*prompt, *conversation, new_message] if message.content]
     response = _get_response(messages)
     if not response:
         return None
@@ -50,13 +51,17 @@ def reset_conversation(channel_id: int) -> None:
     conversations.pop(channel_id, None)
 
 
-def store_custom_prompt(channel_id: int, prompt: str) -> None:
+def store_custom_prompt(channel_id: int, prompt: str | None) -> None:
     custom_prompts[channel_id] = [Message("system", prompt), Message("user", prompt)]
 
 
 def remove_custom_prompt(channel_id: int) -> None:
     if channel_id in custom_prompts:
         custom_prompts.pop(channel_id, None)
+
+
+def remove_prompt(channel_id: int) -> None:
+    store_custom_prompt(channel_id, None)
 
 
 def _get_response(messages: list[dict[str, str]]):
