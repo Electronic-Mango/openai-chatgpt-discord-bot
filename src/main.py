@@ -2,7 +2,8 @@ from os import getenv
 
 from dotenv import load_dotenv
 from hikari import GuildMessageCreateEvent, Intents, MessageCreateEvent
-from lightbulb import BotApp, Context, SlashCommand, add_checks, command, guild_only, implements, option
+from lightbulb import (BotApp, Context, SlashCommand, SlashCommandGroup, SlashSubCommand, add_checks, command,
+                       guild_only, implements, option)
 from lightbulb.commands import MessageCommand
 
 from chat import initial_message, next_message, remove_custom_prompt, reset_conversation, store_custom_prompt
@@ -85,11 +86,19 @@ async def ask_directly(context: Context) -> None:
     await context.respond(response or RATE_LIMIT_MESSAGE)
 
 
-@bot.command()
+@bot.command
+@add_checks(guild_only)
+@command("prompt", "Commands related to forced prompts")
+@implements(SlashCommandGroup)
+async def prompt(_: Context) -> None:
+    pass
+
+
+@prompt.child()
 @add_checks(guild_only)
 @option("prompt", "New custom prompt", str)
-@command("set_prompt", "Set custom prompt for this channel")
-@implements(SlashCommand)
+@command("set", "Set custom prompt for this channel")
+@implements(SlashSubCommand)
 async def set_prompt(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
@@ -98,11 +107,11 @@ async def set_prompt(context: Context) -> None:
     await context.respond(f"Prompt set to: **{new_prompt}**")
 
 
-@bot.command()
+@prompt.child()
 @add_checks(guild_only)
-@command("clear_prompt", "Clear custom prompt for this channel")
-@implements(SlashCommand)
-async def clear_prompt(context: Context) -> None:
+@command("reset", "Reset custom prompt for this channel")
+@implements(SlashSubCommand)
+async def reset_prompt(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     remove_custom_prompt(channel_id)
