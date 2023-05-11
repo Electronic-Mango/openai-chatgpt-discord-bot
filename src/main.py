@@ -23,7 +23,7 @@ source_guild_channels = set()
 @command("start", "Start conversation", auto_defer=True)
 @implements(SlashCommand)
 async def start(context: Context) -> None:
-    message = initial_message()
+    message = initial_message(context.channel_id)
     if not message:
         await context.respond(RATE_LIMIT_MESSAGE)
     else:

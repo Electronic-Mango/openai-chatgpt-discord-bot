@@ -22,8 +22,8 @@ custom_prompts = defaultdict(lambda: initial_prompt)
 openai.api_key = TOKEN
 
 
-def initial_message() -> str | None:
-    return next_message(None, None)
+def initial_message(channel_id: int) -> str | None:
+    return next_message(channel_id, None)
 
 
 def next_message(channel_id: int, text: str) -> str | None:
