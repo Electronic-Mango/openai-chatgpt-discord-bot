@@ -19,7 +19,7 @@ initial_prompt = [Message("system", SYSTEM_MESSAGE)]
 if INITIAL_MESSAGE:
     initial_prompt.append(Message("user", INITIAL_MESSAGE))
 conversations = defaultdict(list)
-custom_prompts = {}
+custom_prompts = defaultdict(lambda: initial_prompt)
 
 openai.api_key = TOKEN
 
@@ -36,7 +36,7 @@ def initial_message() -> str | None:
 def next_message(channel_id: int, text: str) -> str | None:
     conversation = conversations[channel_id]
     new_message = Message("user", text)
-    messages = [message._asdict() for message in [*_get_prompt(channel_id), *conversation, new_message]]
+    messages = [message._asdict() for message in [*custom_prompts[channel_id], *conversation, new_message]]
     response = _get_response(messages)
     if not response:
         return None
@@ -57,10 +57,6 @@ def store_custom_prompt(channel_id: int, prompt: str) -> None:
 def remove_custom_prompt(channel_id: int) -> None:
     if channel_id in custom_prompts:
         custom_prompts.pop(channel_id, None)
-
-
-def _get_prompt(channel_id: int) -> list[Message]:
-    return custom_prompts[channel_id] if channel_id in custom_prompts else initial_prompt
 
 
 def _get_response(messages: list[dict[str, str]]):
