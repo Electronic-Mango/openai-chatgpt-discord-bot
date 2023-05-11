@@ -15,9 +15,7 @@ SYSTEM_MESSAGE = getenv("OPENAI_SYSTEM_MESSAGE")
 INITIAL_MESSAGE = getenv("OPENAI_INITIAL_MESSAGE")
 CONTEXT_LIMIT = getenv("OPENAI_CONTEXT_LIMIT")
 
-initial_prompt = [Message("system", SYSTEM_MESSAGE)]
-if INITIAL_MESSAGE:
-    initial_prompt.append(Message("user", INITIAL_MESSAGE))
+initial_prompt = [Message("system", SYSTEM_MESSAGE), Message("user", INITIAL_MESSAGE)]
 conversations = defaultdict(list)
 custom_prompts = defaultdict(lambda: initial_prompt)
 
@@ -25,12 +23,7 @@ openai.api_key = TOKEN
 
 
 def initial_message() -> str | None:
-    messages = [message._asdict() for message in initial_prompt]
-    response = _get_response(messages)
-    if not response:
-        return None
-    response_message = _parse_response(response)
-    return response_message.content
+    return next_message(None, None)
 
 
 def next_message(channel_id: int, text: str) -> str | None:
@@ -51,7 +44,7 @@ def reset_conversation(channel_id: int) -> None:
     conversations.pop(channel_id, None)
 
 
-def store_custom_prompt(channel_id: int, prompt: str | None) -> None:
+def store_custom_prompt(channel_id: int, prompt: str) -> None:
     custom_prompts[channel_id] = [Message("system", prompt), Message("user", prompt)]
 
 
