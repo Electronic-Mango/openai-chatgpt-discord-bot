@@ -100,7 +100,7 @@ async def prompt(_: Context) -> None:
 @option("prompt", "New custom prompt", str)
 @command("set", "Set custom prompt for this channel")
 @implements(SlashSubCommand)
-async def set_prompt(context: Context) -> None:
+async def prompt_set(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     new_prompt = context.options.prompt
@@ -112,7 +112,7 @@ async def set_prompt(context: Context) -> None:
 @add_checks(guild_only)
 @command("reset", "Reset custom prompt for this channel to default")
 @implements(SlashSubCommand)
-async def reset_prompt(context: Context) -> None:
+async def prompt_reset(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     remove_custom_prompt(channel_id)
@@ -123,7 +123,7 @@ async def reset_prompt(context: Context) -> None:
 @add_checks(guild_only)
 @command("remove", "Remove custom prompt for this channel")
 @implements(SlashSubCommand)
-async def remove_prompt(context: Context) -> None:
+async def prompt_remove(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     remove_prompt(channel_id)
