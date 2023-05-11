@@ -57,6 +57,10 @@ def remove_prompt(channel_id: int) -> None:
     store_custom_prompt(channel_id, None)
 
 
+def get_custom_prompt(channel_id: int) -> str | None:
+    return custom_prompts[channel_id][-1].content if channel_id in custom_prompts else None
+
+
 def _get_response(messages: list[dict[str, str]]):
     try:
         return openai.ChatCompletion.create(model=MODEL, messages=messages)

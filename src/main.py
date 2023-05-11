@@ -7,7 +7,7 @@ from lightbulb import (BotApp, Context, SlashCommand, SlashCommandGroup, SlashSu
 from lightbulb.commands import MessageCommand
 
 from chat import (initial_message, next_message, remove_custom_prompt, remove_prompt, reset_conversation,
-                  store_custom_prompt)
+                  store_custom_prompt, get_custom_prompt)
 
 load_dotenv()
 
@@ -117,6 +117,16 @@ async def prompt_reset(context: Context) -> None:
     reset_conversation(channel_id)
     remove_custom_prompt(channel_id)
     await context.respond("Prompt reset.")
+
+
+@prompt.child()
+@add_checks(guild_only)
+@command("get", "Get current custom prompt")
+@implements(SlashSubCommand)
+async def prompt_get(context: Context) -> None:
+    channel_id = context.channel_id
+    custom_prompt = get_custom_prompt(channel_id)
+    await context.respond(f"Prompt set to: **{custom_prompt}**" if custom_prompt else "No custom prompt configured.")
 
 
 @prompt.child()
