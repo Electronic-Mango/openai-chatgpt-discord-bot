@@ -66,7 +66,7 @@ All commands work only on servers and aren't available in DMs.
 * `/quiet_start` - starts responding to all messages in current channel without notifying other users
 * `/stop` - stops responding to messages
 * `/restart` - resets current conversation and removes all context, other than system message
-* `/ask` - ask for specific prompt, can be used in channels which aren't actively monitored, guild only
+* `/ask` - ask for specific prompt, can be used in channels which aren't actively monitored
 * `ask` - **message command**, can use specified message as prompt
 * `/prompt set <prompt text>` - sets custom prompt for this channel
 * `/prompt reset` - clears custom prompt for this channel
