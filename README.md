@@ -1,6 +1,6 @@
 # Simple OpenAI text model Discord bot
 
-A simple Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari)!
+A simple Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari) and [`lightbulb`](https://github.com/tandemdude/hikari-lightbulb)!
 
 Bot works only on servers and won't respond to DMs.
 
@@ -10,7 +10,7 @@ Conversation/context is not stored permanently and will be removed when the bot 
 
 ## Requirements
 
-This bot was built with `Python 3.11`, [`hikari`](https://github.com/hikari-py/hikari) and [`openai-python`](https://github.com/openai/openai-python).
+This bot was built with `Python 3.11`, [`hikari`](https://github.com/hikari-py/hikari), [`lightbulb`](https://github.com/tandemdude/hikari-lightbulb) and [`openai-python`](https://github.com/openai/openai-python).
 Full list of Python requirements is in the `requirements.txt` file, you can use it to install all of them.
 
 
