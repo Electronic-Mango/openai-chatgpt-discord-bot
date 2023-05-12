@@ -12,7 +12,7 @@ load_dotenv()
 
 INTENTS = Intents.MESSAGE_CONTENT | Intents.DM_MESSAGES | Intents.GUILD_MESSAGES
 
-bot = BotApp(token=getenv("BOT_TOKEN"), intents=INTENTS, help_slash_command=True, logs="DEBUG")
+bot = BotApp(token=getenv("BOT_TOKEN"), intents=INTENTS, logs="DEBUG")
 
 load_all(bot)
 load_ask(bot)
