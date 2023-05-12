@@ -1,13 +1,14 @@
-from lightbulb import (BotApp, Context, Plugin, SlashCommandGroup, SlashSubCommand, add_checks, command, guild_only,
-                       implements, option)
+from lightbulb import (BotApp, Context, Plugin, SlashCommandGroup, SlashSubCommand, add_checks, command, implements,
+                       option)
 
 from chat import get_custom_prompt, remove_custom_prompt, remove_prompt, reset_conversation, store_custom_prompt
+from command_check import check
 
 prompt_plugin = Plugin("prompt_plugin")
 
 
 @prompt_plugin.command()
-@add_checks(guild_only)
+@add_checks(check)
 @command("prompt", "Command group related to forced prompts")
 @implements(SlashCommandGroup)
 async def prompt_group(_: Context) -> None:
@@ -15,7 +16,7 @@ async def prompt_group(_: Context) -> None:
 
 
 @prompt_group.child()
-@add_checks(guild_only)
+@add_checks(check)
 @option("prompt", "New custom prompt", str)
 @command("set", "Set custom prompt for this channel")
 @implements(SlashSubCommand)
@@ -28,7 +29,7 @@ async def prompt_set(context: Context) -> None:
 
 
 @prompt_group.child()
-@add_checks(guild_only)
+@add_checks(check)
 @command("reset", "Reset custom prompt for this channel to default")
 @implements(SlashSubCommand)
 async def prompt_reset(context: Context) -> None:
@@ -39,7 +40,7 @@ async def prompt_reset(context: Context) -> None:
 
 
 @prompt_group.child()
-@add_checks(guild_only)
+@add_checks(check)
 @command("get", "Get current custom prompt")
 @implements(SlashSubCommand)
 async def prompt_get(context: Context) -> None:
@@ -49,7 +50,7 @@ async def prompt_get(context: Context) -> None:
 
 
 @prompt_group.child()
-@add_checks(guild_only)
+@add_checks(check)
 @command("remove", "Remove custom prompt for this channel")
 @implements(SlashSubCommand)
 async def prompt_remove(context: Context) -> None:

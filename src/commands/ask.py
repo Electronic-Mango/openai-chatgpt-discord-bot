@@ -1,14 +1,15 @@
-from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command, guild_only, implements, option
+from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command, implements, option
 from lightbulb.commands import MessageCommand
 
 from chat import next_message
+from command_check import check
 
 ask_plugin = Plugin("ask_plugin")
 
 
 @ask_plugin.command()
 @option("query", "Text to ask", str)
-@add_checks(guild_only)
+@add_checks(check)
 @command("ask", "Ask for specific thing", auto_defer=True)
 @implements(SlashCommand)
 async def ask(context: Context) -> None:
@@ -17,7 +18,7 @@ async def ask(context: Context) -> None:
 
 
 @ask_plugin.command()
-@add_checks(guild_only)
+@add_checks(check)
 @command("ask", "Ask for specific thing", auto_defer=True)
 @implements(MessageCommand)
 async def ask_directly(context: Context) -> None:

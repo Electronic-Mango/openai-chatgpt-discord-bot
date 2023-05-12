@@ -1,14 +1,15 @@
-from hikari import GuildMessageCreateEvent
-from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command, guild_only, implements
+from hikari import MessageCreateEvent
+from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command, implements
 
 from chat import initial_message, next_message, reset_conversation
+from command_check import check
 
 all_plugin = Plugin("all_plugin")
-source_guild_channels = set()
+source_channels = set()
 
 
 @all_plugin.command()
-@add_checks(guild_only)
+@add_checks(check)
 @command("start", "Start conversation", auto_defer=True)
 @implements(SlashCommand)
 async def start(context: Context) -> None:
@@ -16,7 +17,7 @@ async def start(context: Context) -> None:
 
 
 @all_plugin.command()
-@add_checks(guild_only)
+@add_checks(check)
 @command("quiet_start", "Start conversation without notifying other users", ephemeral=True)
 @implements(SlashCommand)
 async def quiet_start(context: Context) -> None:
@@ -26,24 +27,24 @@ async def quiet_start(context: Context) -> None:
 async def _start(message: str, context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
-    source_guild_channels.add(channel_id)
+    source_channels.add(channel_id)
     await context.respond(message)
 
 
 @all_plugin.command()
-@add_checks(guild_only)
+@add_checks(check)
 @command("stop", "Stops conversation")
 @implements(SlashCommand)
 async def stop(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
-    if channel_id in source_guild_channels:
-        source_guild_channels.remove(channel_id)
+    if channel_id in source_channels:
+        source_channels.remove(channel_id)
     await context.respond("Conversation stopped.")
 
 
 @all_plugin.command()
-@add_checks(guild_only)
+@add_checks(check)
 @command("restart", "Restarts conversation and its context", auto_defer=True)
 @implements(SlashCommand)
 async def restart(context: Context) -> None:
@@ -53,19 +54,19 @@ async def restart(context: Context) -> None:
     await start(context)
 
 
-@all_plugin.listener(event=GuildMessageCreateEvent)
-async def on_message(event: GuildMessageCreateEvent) -> None:
-    if _should_skip_message(event):
+@all_plugin.listener(event=MessageCreateEvent)
+async def on_message(event: MessageCreateEvent) -> None:
+    if await _should_skip_message(event):
         return
     response = next_message(event.channel_id, event.content)
     await event.message.respond(response)
 
 
-def _should_skip_message(event: GuildMessageCreateEvent) -> bool:
+async def _should_skip_message(event: MessageCreateEvent) -> bool:
     return (
             not event.is_human
-            or event.channel_id not in source_guild_channels
             or not event.content
+            or event.channel_id not in source_channels
     )
 
 

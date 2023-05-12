@@ -2,7 +2,7 @@
 
 A simple Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari) and [`lightbulb`](https://github.com/tandemdude/hikari-lightbulb)!
 
-Bot works only on servers and won't respond to DMs.
+Bot works on servers for everyone, it will respond to DMs only for bot owner.
 
 Conversation/context is not stored permanently and will be removed when the bot is restarted.
 
@@ -60,7 +60,7 @@ OPENAI_INITIAL_MESSAGE='You are a helpful assistant acting like 18th century but
 
 ## Commands
 
-All commands work only on servers and aren't available in DMs.
+All commands work on servers for everyone and in DMs for bot owner.
 
 * `/start` - starts responding to all messages in current channel
 * `/quiet_start` - starts responding to all messages in current channel without notifying other users
