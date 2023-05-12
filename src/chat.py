@@ -25,12 +25,12 @@ openai.api_key = TOKEN
 
 
 def initial_message(channel_id: int) -> str | None:
-    return next_message(channel_id, None)
+    return next_message(channel_id, "Show a welcome message explaining who you are and what you can do.", False)
 
 
-def next_message(channel_id: int, text: str) -> str:
+def next_message(channel_id: int, text: str, use_conversation: bool = True) -> str:
     prompt = custom_prompts[channel_id]
-    conversation = conversations[channel_id]
+    conversation = conversations[channel_id] if use_conversation else []
     new_message = Message("user", text)
     messages = [message._asdict() for message in [*prompt, *conversation, new_message] if message.content]
     response = _get_response(messages)
