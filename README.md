@@ -71,7 +71,7 @@ All commands work only on servers and aren't available in DMs.
 * `/prompt set <prompt text>` - sets custom prompt for this channel
 * `/prompt reset` - clears custom prompt for this channel
 * `/prompt remove` - remove all prompts, including ones from bot configuration file
-* `/prompt get` - get custom prompt, won't return prompt from configuration file to avoid leaking confiugration data to users
+* `/prompt get` - get custom prompt, won't return prompt from configuration file to avoid leaking configuration data to users
 
 
 
