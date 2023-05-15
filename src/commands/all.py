@@ -51,7 +51,6 @@ async def restart(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     await context.respond("Conversation restarted.")
-    await start(context)
 
 
 @all_plugin.listener(event=MessageCreateEvent)
