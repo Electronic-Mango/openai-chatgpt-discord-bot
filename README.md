@@ -17,12 +17,19 @@ Full list of Python requirements is in the `requirements.txt` file, you can use 
 
 ## Bot permissions
 
+### Message content
+
 This bot requires **message content privileged gateway intent** to function correctly.
 This is required as bot responds to all messages in a given channel.
 
 You can enable this content for the whole bot in [Discord Developer Portal](https://discord.com/developers/applications) and specific bot settings.
 
 Currently bot won't even start without this privileged intent enabled.
+
+
+### Sending text messages
+
+Bot also requires **Send Messages** in **Text permissions**, as it responds with regular messages.
 
 
 
