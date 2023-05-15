@@ -10,6 +10,10 @@ services:
     container_name: chatgpt-discord-bot
     restart: unless-stopped
     env_file: .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
 networks:
   default:
     name: chatgpt-discord-bot-network
