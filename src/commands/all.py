@@ -3,6 +3,7 @@ from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command
 
 from chat import initial_message, next_message, reset_conversation
 from command_check import check
+from sender import send
 
 all_plugin = Plugin("all_plugin")
 source_channels = set()
@@ -28,7 +29,7 @@ async def _start(message: str, context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     source_channels.add(channel_id)
-    await context.respond(message)
+    await send(message, context.respond)
 
 
 @all_plugin.command()
@@ -40,7 +41,7 @@ async def stop(context: Context) -> None:
     reset_conversation(channel_id)
     if channel_id in source_channels:
         source_channels.remove(channel_id)
-    await context.respond("Conversation stopped.")
+    await send("Conversation stopped.", context.respond)
 
 
 @all_plugin.command()
@@ -50,7 +51,7 @@ async def stop(context: Context) -> None:
 async def restart(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
-    await context.respond("Conversation restarted.")
+    await send("Conversation restarted", context.respond)
 
 
 @all_plugin.listener(event=MessageCreateEvent)
@@ -58,15 +59,11 @@ async def on_message(event: MessageCreateEvent) -> None:
     if await _should_skip_message(event):
         return
     response = next_message(event.channel_id, event.content)
-    await event.message.respond(response)
+    await send(response, event.message.respond)
 
 
 async def _should_skip_message(event: MessageCreateEvent) -> bool:
-    return (
-            not event.is_human
-            or not event.content
-            or event.channel_id not in source_channels
-    )
+    return not event.is_human or not event.content or event.channel_id not in source_channels
 
 
 def load(bot: BotApp) -> None:

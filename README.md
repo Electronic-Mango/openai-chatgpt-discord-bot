@@ -51,6 +51,17 @@ BOT_TOKEN='<your secret bot token>'
 ```
 
 
+You can optionally configure max send message length, by default length of 2000 is used:
+
+```dotenv
+MAX_MESSAGE_LENGTH=<custom max message length>
+```
+
+If message send by the bot exceeds this value it's split into multiple messages.
+2000 is max message length for Discord bots, thus it's used by default.
+
+
+
 ### OpenAI API
 
 One required parameter is [API key](https://platform.openai.com/account/api-keys).

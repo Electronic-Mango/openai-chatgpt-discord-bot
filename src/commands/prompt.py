@@ -1,8 +1,18 @@
-from lightbulb import (BotApp, Context, Plugin, SlashCommandGroup, SlashSubCommand, add_checks, command, implements,
-                       option)
+from lightbulb import (
+    BotApp,
+    Context,
+    Plugin,
+    SlashCommandGroup,
+    SlashSubCommand,
+    add_checks,
+    command,
+    implements,
+    option,
+)
 
 from chat import get_custom_prompt, remove_custom_prompt, remove_prompt, reset_conversation, store_custom_prompt
 from command_check import check
+from sender import send
 
 prompt_plugin = Plugin("prompt_plugin")
 
@@ -25,7 +35,7 @@ async def prompt_set(context: Context) -> None:
     reset_conversation(channel_id)
     new_prompt = context.options.prompt
     store_custom_prompt(channel_id, new_prompt)
-    await context.respond(f"Prompt set to: **{new_prompt}**")
+    await send(f"Prompt set to: **{new_prompt}**", context.respond)
 
 
 @prompt_group.child()
@@ -36,7 +46,7 @@ async def prompt_reset(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     remove_custom_prompt(channel_id)
-    await context.respond("Prompt reset.")
+    await send("Prompt reset.", context.respond)
 
 
 @prompt_group.child()
@@ -46,7 +56,8 @@ async def prompt_reset(context: Context) -> None:
 async def prompt_get(context: Context) -> None:
     channel_id = context.channel_id
     custom_prompt = get_custom_prompt(channel_id)
-    await context.respond(f"Prompt set to: **{custom_prompt}**" if custom_prompt else "No custom prompt configured.")
+    response = f"Prompt set to: **{custom_prompt}**" if custom_prompt else "No custom prompt configured."
+    await send(response, context.respond)
 
 
 @prompt_group.child()
@@ -57,7 +68,7 @@ async def prompt_remove(context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     remove_prompt(channel_id)
-    await context.respond("Prompt removed.")
+    await send("Prompt removed.", context.respond)
 
 
 def load(bot: BotApp) -> None:
