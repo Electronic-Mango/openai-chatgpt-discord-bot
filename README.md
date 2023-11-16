@@ -132,6 +132,6 @@ The file itself isn't added to the container.
 
 ## Disclaimer
 
-This bot is in no way affiliated, associated, authorized, endorsed by, or in any way officially connected with JustWatch.
+This bot is in no way affiliated, associated, authorized, endorsed by, or in any way officially connected with OpenAI.
 This is an independent and unofficial project.
 Use at your own risk.
