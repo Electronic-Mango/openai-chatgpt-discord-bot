@@ -1,6 +1,6 @@
 # Simple OpenAI text model Discord bot
 
-A simple Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari) and [`lightbulb`](https://github.com/tandemdude/hikari-lightbulb)!
+A simple and unofficial Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari) and [`lightbulb`](https://github.com/tandemdude/hikari-lightbulb)!
 
 Bot works on servers for everyone, it will respond to DMs only for bot owner.
 
@@ -127,3 +127,11 @@ You can run the bot from the source code directly, or in a Docker container.
 
 Note that `.env` file is used only for loading environment variables into Docker container through compose.
 The file itself isn't added to the container.
+
+
+
+## Disclaimer
+
+This bot is in no way affiliated, associated, authorized, endorsed by, or in any way officially connected with JustWatch.
+This is an independent and unofficial project.
+Use at your own risk.
