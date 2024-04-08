@@ -3,6 +3,7 @@ from os import getenv
 
 from dotenv import load_dotenv
 from openai import OpenAI, RateLimitError
+from openai.types.chat import ChatCompletion
 
 load_dotenv()
 
@@ -62,7 +63,7 @@ def get_custom_prompt(channel_id: int) -> str | None:
     return custom_prompts[channel_id][-1].content if channel_id in custom_prompts else None
 
 
-def _get_response(messages: list[dict[str, str]]):
+def _get_response(messages: list[dict[str, str]]) -> ChatCompletion | None:
     try:
         return client.chat.completions.create(model=MODEL, messages=messages)
     except RateLimitError:
@@ -75,8 +76,8 @@ def _store_message(conversation: list[Message], message: Message) -> None:
         conversation.pop(0)
 
 
-def _parse_response(response) -> Message:
-    message = response["choices"][0]["message"]
-    content = message["content"]
-    role = message["role"]
+def _parse_response(response: ChatCompletion) -> Message:
+    message = response.choices[0].message
+    content = message.content
+    role = message.role
     return Message(role, content)
