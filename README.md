@@ -75,6 +75,7 @@ Through `.env` you can also configure other parameters:
 * `OPENAI_SYSTEM_MESSAGE` - system message
 * `OPENAI_CONTEXT_LIMIT` - how many messages will be kept in the context aside from prompt, all messages will be kept if empty
 * `OPENAI_INITIAL_MESSAGE` - additional message added after system message to all conversations, can be empty for no additional messages
+* `OPENAI_LOG` - log level of OpenAI API, either `debug` or `info`, can be empty for no additional logging configuration
 
 Note that `gpt-3.5-turbo` [doesn't pay strong attention to system message](https://platform.openai.com/docs/guides/chat/instructing-chat-models), so changing it might not provide significant changes to responses.
 You can use `OPENAI_INITIAL_MESSAGE` to tweak initial behaviour of the model.
@@ -84,6 +85,7 @@ OPENAI_MODEL='gpt-3.5-turbo'
 OPENAI_SYSTEM_MESSAGE='You are a helpful assistant.'
 OPENAI_CONTEXT_LIMIT=1000
 OPENAI_INITIAL_MESSAGE='You are a helpful assistant acting like 18th century butler,'
+OPENAI_LOG='info'
 ```
 
 

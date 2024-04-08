@@ -1,9 +1,8 @@
 from collections import defaultdict, namedtuple
 from os import getenv
 
-import openai
 from dotenv import load_dotenv
-from openai.error import RateLimitError
+from openai import OpenAI, RateLimitError
 
 load_dotenv()
 
@@ -21,7 +20,7 @@ initial_prompt = [Message("system", SYSTEM_MESSAGE), Message("user", INITIAL_MES
 conversations = defaultdict(list)
 custom_prompts = defaultdict(lambda: initial_prompt)
 
-openai.api_key = TOKEN
+client = OpenAI(api_key=TOKEN)
 
 
 def initial_message(channel_id: int) -> str | None:
@@ -65,7 +64,7 @@ def get_custom_prompt(channel_id: int) -> str | None:
 
 def _get_response(messages: list[dict[str, str]]):
     try:
-        return openai.ChatCompletion.create(model=MODEL, messages=messages)
+        return client.chat.completions.create(model=MODEL, messages=messages)
     except RateLimitError:
         return None
 
