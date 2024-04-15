@@ -4,10 +4,6 @@ A simple and unofficial Discord bot wrapping [OpenAI API](https://openai.com/blo
 
 Bot works on servers for everyone, it will respond to DMs only for bot owner.
 
-Configured channel IDs where bot should automatically respond can be stored, the bot will be able to automatically start responding after restart.
-Conversation/context is not stored permanently and will be removed when the bot is restarted,
-so it won't remember the context of the conversation.
-
 
 
 ## Requirements
@@ -107,14 +103,15 @@ OPENAI_LOG='info'
 
 All commands work on servers for everyone and in DMs for bot owner.
 
-* `/start` - starts responding to all messages in current channel
-* `/quiet_start` - starts responding to all messages in current channel without notifying other users
-* `/stop` - stops responding to messages
-* `/restart` - resets current conversation and removes all context, other than system message
+* `/start` - start responding to all messages in current channel
+* `/quiet_start` - start responding to all messages in current channel without notifying other users
+* `/stop` - stop responding to messages
+* `/quiet_stop` - stop responding to messages without notifying other users
+* `/restart` - reset current conversation and removes all context, other than system message
 * `/ask` - ask for specific prompt, can be used in channels which aren't actively monitored
 * `ask` - **message command**, can use specified message as prompt
-* `/prompt set <prompt text>` - sets custom prompt for this channel
-* `/prompt reset` - clears custom prompt for this channel
+* `/prompt set <prompt text>` - set custom prompt for this channel
+* `/prompt reset` - clear custom prompt for this channel
 * `/prompt remove` - remove all prompts, including ones from bot configuration file
 * `/prompt get` - get custom prompt, won't return prompt from configuration file to avoid leaking configuration data to users
 
