@@ -4,7 +4,9 @@ A simple and unofficial Discord bot wrapping [OpenAI API](https://openai.com/blo
 
 Bot works on servers for everyone, it will respond to DMs only for bot owner.
 
-Conversation/context is not stored permanently and will be removed when the bot is restarted.
+Configured channel IDs where bot should automatically respond can be stored, the bot will be able to automatically start responding after restart.
+Conversation/context is not stored permanently and will be removed when the bot is restarted,
+so it won't remember the context of the conversation.
 
 
 
@@ -24,7 +26,7 @@ This is required as bot responds to all messages in a given channel.
 
 You can enable this content for the whole bot in [Discord Developer Portal](https://discord.com/developers/applications) and specific bot settings.
 
-Currently bot won't even start without this privileged intent enabled.
+Currently, bot won't even start without this privileged intent enabled.
 
 
 ### Sending text messages
@@ -60,6 +62,18 @@ MAX_MESSAGE_LENGTH=<custom max message length>
 If message send by the bot exceeds this value it's split into multiple messages.
 2000 is max message length for Discord bots, thus it's used by default.
 
+
+You can also optionally specify file in which all target channels for `all` command can be stored:
+
+```dotenv
+SOURCES_PERSISTENCE_FILE='<path to basic persistence file>'
+```
+
+Bot will store all channel IDs where automatic responding is configured in this file.
+
+**It won't store full message conversation.**
+After bot is restarted (if the specified file still exists and wasn't modified) it will keep responding in previously configured channels,
+however it won't be able to "pick up" the conversation.
 
 
 ### OpenAI API
