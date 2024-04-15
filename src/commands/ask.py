@@ -14,7 +14,7 @@ ask_plugin = Plugin("ask_plugin")
 @command("ask", "Ask for specific thing", auto_defer=True)
 @implements(SlashCommand)
 async def ask(context: Context) -> None:
-    response = next_message(context.channel_id, context.options.query)
+    response = await next_message(context.channel_id, context.options.query)
     await send(response, context.respond)
 
 
@@ -23,7 +23,7 @@ async def ask(context: Context) -> None:
 @command("ask", "Ask for specific thing", auto_defer=True)
 @implements(MessageCommand)
 async def ask_directly(context: Context) -> None:
-    response = next_message(context.channel_id, context.options.target.content)
+    response = await next_message(context.channel_id, context.options.target.content)
     await send(response, context.respond)
 
 

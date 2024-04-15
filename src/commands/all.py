@@ -15,7 +15,8 @@ source_channels = load_source_channels()
 @command("start", "Start conversation", auto_defer=True)
 @implements(SlashCommand)
 async def start(context: Context) -> None:
-    await _start(initial_message(context.channel_id), context)
+    start_message = await initial_message(context.channel_id)
+    await _start(start_message, context)
 
 
 @all_plugin.command()
@@ -60,7 +61,7 @@ async def restart(context: Context) -> None:
 async def on_message(event: MessageCreateEvent) -> None:
     if await _should_skip_message(event):
         return
-    response = next_message(event.channel_id, event.content)
+    response = await next_message(event.channel_id, event.content)
     await send(response, event.message.respond)
 
 

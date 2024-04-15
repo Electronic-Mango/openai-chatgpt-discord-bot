@@ -2,7 +2,7 @@ from collections import defaultdict, namedtuple
 from os import getenv
 
 from dotenv import load_dotenv
-from openai import OpenAI, RateLimitError
+from openai import AsyncOpenAI, RateLimitError
 from openai.types.chat import ChatCompletion
 
 load_dotenv()
@@ -21,19 +21,19 @@ initial_prompt = [Message("system", SYSTEM_MESSAGE), Message("user", INITIAL_MES
 conversations = defaultdict(list)
 custom_prompts = defaultdict(lambda: initial_prompt)
 
-client = OpenAI(api_key=TOKEN)
+client = AsyncOpenAI(api_key=TOKEN)
 
 
-def initial_message(channel_id: int) -> str | None:
-    return next_message(channel_id, "Show a welcome message explaining who you are and what you can do.", False)
+async def initial_message(channel_id: int) -> str | None:
+    return await next_message(channel_id, "Show a welcome message explaining who you are and what you can do.", False)
 
 
-def next_message(channel_id: int, text: str, use_conversation: bool = True) -> str:
+async def next_message(channel_id: int, text: str, use_conversation: bool = True) -> str:
     prompt = custom_prompts[channel_id]
     conversation = conversations[channel_id] if use_conversation else []
     new_message = Message("user", text)
     messages = [message._asdict() for message in [*prompt, *conversation, new_message] if message.content]
-    response = _get_response(messages)
+    response = await _get_response(messages)
     if not response:
         return RATE_LIMIT_MESSAGE
     _store_message(conversation, new_message)
@@ -63,9 +63,9 @@ def get_custom_prompt(channel_id: int) -> str | None:
     return custom_prompts[channel_id][-1].content if channel_id in custom_prompts else None
 
 
-def _get_response(messages: list[dict[str, str]]) -> ChatCompletion | None:
+async def _get_response(messages: list[dict[str, str]]) -> ChatCompletion | None:
     try:
-        return client.chat.completions.create(model=MODEL, messages=messages)
+        return await client.chat.completions.create(model=MODEL, messages=messages)
     except RateLimitError:
         return None
 
