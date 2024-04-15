@@ -144,6 +144,8 @@ You can run the bot from the source code directly, or in a Docker container.
 Note that `.env` file is used only for loading environment variables into Docker container through compose.
 The file itself isn't added to the container.
 
+When using Docker the bot will automatically store channel IDs for purposes of `all` command in `persistence` file located in project root.
+
 
 
 ## Disclaimer

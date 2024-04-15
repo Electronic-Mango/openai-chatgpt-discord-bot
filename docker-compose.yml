@@ -10,6 +10,8 @@ services:
     container_name: chatgpt-discord-bot
     restart: unless-stopped
     env_file: .env
+    environment:
+      - SOURCES_PERSISTENCE_FILE=persistence
     logging:
       driver: "json-file"
       options:
