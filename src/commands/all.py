@@ -3,10 +3,11 @@ from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command
 
 from chat import initial_message, next_message, reset_conversation
 from command_check import check
+from persistence import load_source_channels, store_source_channel
 from sender import send
 
 all_plugin = Plugin("all_plugin")
-source_channels = set()
+source_channels = load_source_channels()
 
 
 @all_plugin.command()
@@ -29,6 +30,7 @@ async def _start(message: str, context: Context) -> None:
     channel_id = context.channel_id
     reset_conversation(channel_id)
     source_channels.add(channel_id)
+    store_source_channel(channel_id)
     await send(message, context.respond)
 
 
