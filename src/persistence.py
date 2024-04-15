@@ -14,7 +14,7 @@ def load_source_channels() -> set[int]:
     try:
         with open(SOURCES_FILE, "rb+") as sources:
             return load(sources)
-    except FileNotFoundError | EOFError:
+    except (FileNotFoundError, EOFError):
         return set()
 
 
