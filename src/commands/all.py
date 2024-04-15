@@ -61,8 +61,10 @@ async def restart(context: Context) -> None:
 async def on_message(event: MessageCreateEvent) -> None:
     if await _should_skip_message(event):
         return
-    response = await next_message(event.channel_id, event.content)
-    await send(response, event.message.respond)
+    channel = await event.message.fetch_channel()
+    async with channel.trigger_typing():
+        response = await next_message(event.channel_id, event.content)
+        await send(response, event.message.respond)
 
 
 async def _should_skip_message(event: MessageCreateEvent) -> bool:
