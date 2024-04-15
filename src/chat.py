@@ -46,7 +46,7 @@ def reset_conversation(channel_id: int) -> None:
     conversations.pop(channel_id, None)
 
 
-def store_custom_prompt(channel_id: int, prompt: str) -> None:
+def store_custom_prompt(channel_id: int, prompt: str | None) -> None:
     custom_prompts[channel_id] = [Message("system", prompt), Message("user", prompt)]
 
 
