@@ -63,7 +63,7 @@ If message send by the bot exceeds this value it's split into multiple messages.
 2000 is max message length for Discord bots, thus it's used by default.
 
 
-You can also optionally specify file in which all target channels for `all` command can be stored:
+You can also optionally specify file in which all target channels for `start` command can be stored:
 
 ```dotenv
 SOURCES_PERSISTENCE_FILE='<path to basic persistence file>'
@@ -144,7 +144,7 @@ You can run the bot from the source code directly, or in a Docker container.
 Note that `.env` file is used only for loading environment variables into Docker container through compose.
 The file itself isn't added to the container.
 
-When using Docker the bot will automatically store channel IDs for purposes of `all` command in `persistence` file located in project root.
+When using Docker the bot will automatically store channel IDs for purposes of `start` command in `persistence` file located in project root.
 
 
 
