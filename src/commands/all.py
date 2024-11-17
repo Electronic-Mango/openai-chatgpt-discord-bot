@@ -1,6 +1,7 @@
 from hikari import MessageCreateEvent
 from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command, implements
 
+from attachment_parser import parse_image_urls
 from chat import initial_message, next_message, reset_conversation
 from command_check import check
 from persistence import load_source_channels, store_source_channel
@@ -63,7 +64,9 @@ async def on_message(event: MessageCreateEvent) -> None:
         return
     channel = await event.message.fetch_channel()
     async with channel.trigger_typing():
-        response = await next_message(event.channel_id, event.content)
+        text = event.message.content
+        image_urls = parse_image_urls(event.message.attachments)
+        response = await next_message(event.channel_id, text, image_urls)
         await send(response, event.message.respond)
 
 

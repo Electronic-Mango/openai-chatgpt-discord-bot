@@ -1,6 +1,7 @@
 from lightbulb import BotApp, Context, Plugin, SlashCommand, add_checks, command, implements, option
 from lightbulb.commands import MessageCommand
 
+from attachment_parser import parse_image_urls
 from chat import next_message
 from command_check import check
 from sender import send
@@ -23,7 +24,9 @@ async def ask(context: Context) -> None:
 @command("ask", "Ask for specific thing", auto_defer=True)
 @implements(MessageCommand)
 async def ask_directly(context: Context) -> None:
-    response = await next_message(context.channel_id, context.options.target.content)
+    text = context.options.target.content
+    image_urls = parse_image_urls(context.options.target.attachments)
+    response = await next_message(context.channel_id, text, image_urls)
     await send(response, context.respond)
 
 
