@@ -1,6 +1,7 @@
 # Simple OpenAI text model Discord bot
 
 A simple and unofficial Discord bot wrapping [OpenAI API](https://openai.com/blog/openai-api/) text models (like [ChatGPT](https://openai.com/blog/chatgpt)), build with [`hikari`](https://github.com/hikari-py/hikari) and [`lightbulb`](https://github.com/tandemdude/hikari-lightbulb)!
+Response Markdown is formatted with [`mdformat`](https://github.com/hukkin/mdformat) and split into messages with my own [`simple-markdown-splitter`](https://github.com/Electronic-Mango/simple-markdown-splitter).
 
 Bot works on servers for everyone, it will respond to DMs only for bot owner.
 
@@ -9,6 +10,7 @@ Bot works on servers for everyone, it will respond to DMs only for bot owner.
 ## Requirements
 
 This bot was built with `Python 3.11`, [`hikari`](https://github.com/hikari-py/hikari), [`lightbulb`](https://github.com/tandemdude/hikari-lightbulb) and [`openai-python`](https://github.com/openai/openai-python).
+Response Markdown is formatted with [`mdformat`](https://github.com/hukkin/mdformat) and split into messages with my own [`simple-markdown-splitter`](https://github.com/Electronic-Mango/simple-markdown-splitter).
 Full list of Python requirements is in the `requirements.txt` file, you can use it to install all of them.
 
 
